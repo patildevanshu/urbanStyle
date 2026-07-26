@@ -56,7 +56,7 @@ function ShoppingHome() {
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -77,6 +77,15 @@ function ShoppingHome() {
   }
 
   function handleAddtoCart(getCurrentProductId) {
+    if (!isAuthenticated || !user) {
+      toast({
+        title: "Please log in to add items to cart",
+        variant: "destructive",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,

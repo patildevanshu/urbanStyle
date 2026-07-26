@@ -12,12 +12,14 @@ import { Label } from "../ui/label";
 import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
+import { useNavigate } from "react-router-dom";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
 
@@ -30,6 +32,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
+    if (!isAuthenticated || !user) {
+      setOpen(false);
+      toast({
+        title: "Please log in to add items to cart",
+        variant: "destructive",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -72,6 +84,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddReview() {
+    if (!isAuthenticated || !user) {
+      setOpen(false);
+      toast({
+        title: "Please log in to write a review",
+        variant: "destructive",
+      });
+      navigate("/auth/login");
+      return;
+    }
+
     dispatch(
       addReview({
         productId: productDetails?._id,

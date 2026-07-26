@@ -5,9 +5,15 @@ function CheckAuth({ isAuthenticated, user, children }) {
 
   console.log(location.pathname, isAuthenticated);
 
-  if (location.pathname === "/") {
+  const publicShopPaths = [
+    "/shop/home",
+    "/shop/listing",
+    "/shop/search",
+  ];
+
+  if (location.pathname === "/" || location.pathname === "/shop") {
     if (!isAuthenticated) {
-      return <Navigate to="/auth/login" />;
+      return <Navigate to="/shop/home" />;
     } else {
       if (user?.role === "admin") {
         return <Navigate to="/admin/dashboard" />;
@@ -17,14 +23,15 @@ function CheckAuth({ isAuthenticated, user, children }) {
     }
   }
 
-  if (
-    !isAuthenticated &&
-    !(
+  if (!isAuthenticated) {
+    const isPublicPath =
       location.pathname.includes("/login") ||
-      location.pathname.includes("/register")
-    )
-  ) {
-    return <Navigate to="/auth/login" />;
+      location.pathname.includes("/register") ||
+      publicShopPaths.some((path) => location.pathname.includes(path));
+
+    if (!isPublicPath) {
+      return <Navigate to="/auth/login" />;
+    }
   }
 
   if (
