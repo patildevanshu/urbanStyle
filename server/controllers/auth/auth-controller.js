@@ -154,4 +154,22 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, authMiddleware };
+const setRole = async (req, res) => {
+  const { email, role } = req.body;
+  try {
+    const user = await User.findOneAndUpdate({ email }, { role }, { new: true });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({
+      success: true,
+      message: `Role updated to ${role}`,
+      user: { email: user.email, role: user.role, userName: user.userName },
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ success: false, message: "Error updating role" });
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, authMiddleware, setRole };
