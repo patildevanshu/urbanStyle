@@ -95,24 +95,27 @@ function SearchProducts() {
   console.log(searchResults, "searchResults");
 
   return (
-    <div className="container mx-auto md:px-6 px-4 py-8">
-      <div className="flex justify-center mb-8">
-        <div className="w-full flex items-center">
+    <div className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
+      <div className="flex justify-center mb-6 sm:mb-8">
+        <div className="w-full max-w-2xl flex items-center">
           <Input
             value={keyword}
             name="keyword"
             onChange={(event) => setKeyword(event.target.value)}
-            className="py-6"
+            className="py-5 sm:py-6 text-sm sm:text-base"
             placeholder="Search Products..."
           />
         </div>
       </div>
       {!searchResults.length ? (
-        <h1 className="text-5xl font-extrabold">No result found!</h1>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-muted-foreground py-8">
+          No results found!
+        </h1>
       ) : null}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
         {searchResults.map((item) => (
           <ShoppingProductTile
+            key={item?._id}
             handleAddtoCart={handleAddtoCart}
             product={item}
             handleGetProductDetails={handleGetProductDetails}

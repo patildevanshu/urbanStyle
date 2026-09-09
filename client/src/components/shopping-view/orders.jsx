@@ -41,17 +41,17 @@ function ShoppingOrders() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Order History</CardTitle>
+      <CardHeader className="p-4 sm:p-6">
+        <CardTitle className="text-lg sm:text-xl">Order History</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-2 sm:p-6 pt-0 sm:pt-0">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
+              <TableHead className="text-xs sm:text-sm">Order ID</TableHead>
+              <TableHead className="text-xs sm:text-sm">Order Date</TableHead>
+              <TableHead className="text-xs sm:text-sm">Order Status</TableHead>
+              <TableHead className="text-xs sm:text-sm">Order Price</TableHead>
               <TableHead>
                 <span className="sr-only">Details</span>
               </TableHead>
@@ -60,12 +60,14 @@ function ShoppingOrders() {
           <TableBody>
             {orderList && orderList.length > 0
               ? orderList.map((orderItem) => (
-                  <TableRow>
-                    <TableCell>{orderItem?._id}</TableCell>
-                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
+                  <TableRow key={orderItem?._id}>
+                    <TableCell className="font-mono text-xs max-w-[90px] sm:max-w-none truncate" title={orderItem?._id}>
+                      {orderItem?._id}
+                    </TableCell>
+                    <TableCell className="text-xs sm:text-sm whitespace-nowrap">{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
                       <Badge
-                        className={`py-1 px-3 ${
+                        className={`py-0.5 px-2 text-[10px] sm:text-xs ${
                           orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
                             : orderItem?.orderStatus === "rejected"
@@ -76,7 +78,7 @@ function ShoppingOrders() {
                         {orderItem?.orderStatus}
                       </Badge>
                     </TableCell>
-                    <TableCell>${orderItem?.totalAmount}</TableCell>
+                    <TableCell className="text-xs sm:text-sm font-semibold">${orderItem?.totalAmount}</TableCell>
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
@@ -86,6 +88,8 @@ function ShoppingOrders() {
                         }}
                       >
                         <Button
+                          size="sm"
+                          className="text-xs px-2.5 py-1 sm:px-3 sm:py-1.5 h-auto"
                           onClick={() =>
                             handleFetchOrderDetails(orderItem?._id)
                           }

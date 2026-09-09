@@ -72,39 +72,39 @@ function UserCartItemsContent({ cartItem }) {
   }
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-center gap-3 sm:gap-4 py-2 border-b last:border-b-0">
       <img
         src={cartItem?.image}
         alt={cartItem?.title}
-        className="w-20 h-20 rounded object-cover"
+        className="w-16 h-16 sm:w-20 sm:h-20 rounded object-cover flex-shrink-0"
       />
-      <div className="flex-1">
-        <h3 className="font-extrabold">{cartItem?.title}</h3>
-        <div className="flex items-center gap-2 mt-1">
+      <div className="flex-1 min-w-0">
+        <h3 className="font-bold text-sm sm:text-base truncate">{cartItem?.title}</h3>
+        <div className="flex items-center gap-2 mt-1.5">
           <Button
             variant="outline"
-            className="h-8 w-8 rounded-full"
+            className="h-7 w-7 sm:h-8 sm:w-8 rounded-full p-0"
             size="icon"
             disabled={cartItem?.quantity === 1}
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
           >
-            <Minus className="w-4 h-4" />
+            <Minus className="w-3.5 h-3.5" />
             <span className="sr-only">Decrease</span>
           </Button>
-          <span className="font-semibold">{cartItem?.quantity}</span>
+          <span className="font-semibold text-xs sm:text-sm">{cartItem?.quantity}</span>
           <Button
             variant="outline"
-            className="h-8 w-8 rounded-full"
+            className="h-7 w-7 sm:h-8 sm:w-8 rounded-full p-0"
             size="icon"
             onClick={() => handleUpdateQuantity(cartItem, "plus")}
           >
-            <Plus className="w-4 h-4" />
-            <span className="sr-only">Decrease</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span className="sr-only">Increase</span>
           </Button>
         </div>
       </div>
-      <div className="flex flex-col items-end">
-        <p className="font-semibold">
+      <div className="flex flex-col items-end flex-shrink-0">
+        <p className="font-semibold text-xs sm:text-sm">
           $
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
@@ -113,8 +113,8 @@ function UserCartItemsContent({ cartItem }) {
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}
-          className="cursor-pointer mt-1"
-          size={20}
+          className="cursor-pointer mt-1.5 text-muted-foreground hover:text-red-500 transition-colors"
+          size={18}
         />
       </div>
     </div>

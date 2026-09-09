@@ -20,30 +20,40 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       : 0;
 
   return (
-    <SheetContent className="sm:max-w-md">
+    <SheetContent className="sm:max-w-md w-full flex flex-col h-full p-4 sm:p-6">
       <SheetHeader>
         <SheetTitle>Your Cart</SheetTitle>
       </SheetHeader>
-      <div className="mt-8 space-y-4">
-        {cartItems && cartItems.length > 0
-          ? cartItems.map((item) => <UserCartItemsContent cartItem={item} />)
-          : null}
+      <div className="mt-4 sm:mt-6 flex-1 overflow-y-auto space-y-4 pr-1">
+        {cartItems && cartItems.length > 0 ? (
+          cartItems.map((item) => (
+            <UserCartItemsContent
+              key={item.productId || item._id}
+              cartItem={item}
+            />
+          ))
+        ) : (
+          <div className="text-center text-muted-foreground py-12">
+            <p>Your cart is empty</p>
+          </div>
+        )}
       </div>
-      <div className="mt-8 space-y-4">
-        <div className="flex justify-between">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">${totalCartAmount}</span>
+      <div className="mt-auto pt-4 border-t space-y-4">
+        <div className="flex justify-between text-base font-bold">
+          <span>Total</span>
+          <span>${totalCartAmount.toFixed(2)}</span>
         </div>
+        <Button
+          disabled={!cartItems || cartItems.length === 0}
+          onClick={() => {
+            navigate("/shop/checkout");
+            setOpenCartSheet(false);
+          }}
+          className="w-full"
+        >
+          Checkout
+        </Button>
       </div>
-      <Button
-        onClick={() => {
-          navigate("/shop/checkout");
-          setOpenCartSheet(false);
-        }}
-        className="w-full mt-6"
-      >
-        Checkout
-      </Button>
     </SheetContent>
   );
 }

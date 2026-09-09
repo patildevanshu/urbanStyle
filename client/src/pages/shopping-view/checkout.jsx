@@ -97,27 +97,33 @@ function ShoppingCheckout() {
 
   return (
     <div className="flex flex-col">
-      <div className="relative h-[300px] w-full overflow-hidden">
+      <div className="relative h-[160px] sm:h-[220px] md:h-[300px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-3 sm:mt-5 p-3 sm:p-5">
         <Address
           selectedId={currentSelectedAddress}
           setCurrentSelectedAddress={setCurrentSelectedAddress}
         />
-        <div className="flex flex-col gap-4">
-          {cartItems && cartItems.items && cartItems.items.length > 0
-            ? cartItems.items.map((item) => (
-                <UserCartItemsContent cartItem={item} />
-              ))
-            : null}
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">${totalCartAmount}</span>
+        <div className="flex flex-col gap-4 bg-background p-4 rounded-lg border">
+          <h3 className="text-base sm:text-lg font-bold">Order Summary</h3>
+          <div className="flex flex-col gap-2 max-h-[350px] overflow-y-auto pr-1">
+            {cartItems && cartItems.items && cartItems.items.length > 0
+              ? cartItems.items.map((item) => (
+                  <UserCartItemsContent
+                    key={item.productId || item._id}
+                    cartItem={item}
+                  />
+                ))
+              : null}
+          </div>
+          <div className="mt-2 pt-4 border-t space-y-4">
+            <div className="flex justify-between font-bold text-base">
+              <span>Total</span>
+              <span>${totalCartAmount.toFixed(2)}</span>
             </div>
           </div>
-          <div className="mt-4 w-full">
+          <div className="mt-2 w-full">
             <Button onClick={handleInitiatePaypalPayment} className="w-full">
               {isPaymentStart
                 ? "Processing Paypal Payment..."

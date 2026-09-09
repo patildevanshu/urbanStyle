@@ -16,7 +16,8 @@ import {
   fetchAllFilteredProducts,
   fetchProductDetails,
 } from "@/store/shop/products-slice";
-import { ArrowUpDownIcon } from "lucide-react";
+import { ArrowUpDownIcon, Filter } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -49,6 +50,7 @@ function ShoppingListing() {
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [openFilterSheet, setOpenFilterSheet] = useState(false);
   const { toast } = useToast();
 
   const categorySearchParam = searchParams.get("category");
@@ -156,32 +158,56 @@ function ShoppingListing() {
   console.log(productList, "productListproductListproductList");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
-      <ProductFilter filters={filters} handleFilter={handleFilter} />
+    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-4 md:gap-6 p-3 sm:p-4 md:p-6">
+      {/* Desktop Filter Sidebar */}
+      <div className="hidden md:block">
+        <ProductFilter filters={filters} handleFilter={handleFilter} />
+      </div>
+
       <div className="bg-background w-full rounded-lg shadow-sm">
-        <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">All Products</h2>
-          <div className="flex items-center gap-3">
-            <span className="text-muted-foreground">
-              {productList?.length} Products
+        <div className="p-3 sm:p-4 border-b flex flex-wrap gap-2 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-extrabold">All Products</h2>
+            <span className="text-muted-foreground text-xs sm:text-sm">
+              ({productList?.length || 0} Products)
             </span>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* Mobile Filter Drawer */}
+            <Sheet open={openFilterSheet} onOpenChange={setOpenFilterSheet}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex md:hidden items-center gap-1.5 text-xs sm:text-sm"
+                >
+                  <Filter className="h-3.5 w-3.5" />
+                  <span>Filters</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[85vw] max-w-xs overflow-y-auto p-4">
+                <ProductFilter filters={filters} handleFilter={handleFilter} />
+              </SheetContent>
+            </Sheet>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 text-xs sm:text-sm"
                 >
-                  <ArrowUpDownIcon className="h-4 w-4" />
+                  <ArrowUpDownIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span>Sort by</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuContent align="end" className="w-[180px] sm:w-[200px]">
                 <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
                     <DropdownMenuRadioItem
                       value={sortItem.id}
                       key={sortItem.id}
+                      className="text-xs sm:text-sm cursor-pointer"
                     >
                       {sortItem.label}
                     </DropdownMenuRadioItem>
@@ -191,16 +217,21 @@ function ShoppingListing() {
             </DropdownMenu>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4">
           {productList && productList.length > 0
             ? productList.map((productItem) => (
                 <ShoppingProductTile
+                  key={productItem?._id}
                   handleGetProductDetails={handleGetProductDetails}
                   product={productItem}
                   handleAddtoCart={handleAddtoCart}
                 />
               ))
-            : null}
+            : (
+              <div className="col-span-full py-12 text-center text-muted-foreground">
+                <p>No products found with the selected filters.</p>
+              </div>
+            )}
         </div>
       </div>
       <ProductDetailsDialog
